@@ -324,7 +324,7 @@
         </div>
 
         <div class="stat-value">
-          SQLite
+          Google Sheets
         </div>
       </div>
 
@@ -338,6 +338,9 @@
 
   <script>
 
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbxA7Ge4T2bx_IBQLG56_Hp-WX47Yy2YSD7dEC2UQXcPnGmOX6MTMHIV_Z6MU-Zgat2-/exec";
+
     async function loadSubmissions() {
 
       const list =
@@ -346,9 +349,7 @@
       try {
 
         const response =
-          await fetch(
-            "/api/admin/submissions"
-          );
+          await fetch(API_URL);
 
         if (!response.ok) {
           throw new Error(
@@ -381,7 +382,7 @@
               <div class="submission-top">
 
                 <div class="submission-id">
-                  SUBMISSION #${item.id}
+                  SUBMISSION #${escapeHtml(item.id)}
                 </div>
 
                 <div class="date">
@@ -438,15 +439,21 @@
 
     function formatDate(date) {
 
-      return new Date(
-        date + "Z"
-      ).toLocaleString();
+      if (!date) return "";
+
+      const d = new Date(date);
+
+      if (isNaN(d.getTime())) {
+        return String(date);
+      }
+
+      return d.toLocaleString();
 
     }
 
     function escapeHtml(value) {
 
-      return String(value)
+      return String(value ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
