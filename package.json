@@ -1,0 +1,13 @@
+{
+  "name": "welcome-form",
+  "version": "1.0.0",
+  "description": "Welcome form with admin dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "better-sqlite3": "^12.4.1"
+  }
+}
