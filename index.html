@@ -132,6 +132,7 @@
       cursor: pointer;
       margin-top: 5px;
       box-shadow: 0 15px 35px rgba(124,58,237,.32);
+      transition: .2s;
     }
 
     button:hover {
@@ -206,7 +207,7 @@
         <label for="section1">User Name</label>
 
         <div class="input-box">
-          <span class="User Name">01</span>
+          <span class="number">01</span>
 
           <input
             id="section1"
@@ -249,12 +250,14 @@
   </div>
 
   <script>
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbxA7Ge4T2bx_IBQLG56_Hp-WX47Yy2YSD7dEC2UQXcPnGmOX6MTMHIV_Z6MU-Zgat2-/exec";
+
     const form = document.getElementById("myForm");
     const button = document.getElementById("submitBtn");
     const status = document.getElementById("status");
 
     form.addEventListener("submit", async function(event) {
-
       event.preventDefault();
 
       const section1 =
@@ -275,24 +278,20 @@
       button.textContent = "Submitting...";
 
       try {
-
-        const response = await fetch(
-          "/api/submissions",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              section1: section1,
-              section2: section2
-            })
-          }
-        );
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify({
+            section1: section1,
+            section2: section2
+          })
+        });
 
         const result = await response.json();
 
-        if (!response.ok || !result.success) {
+        if (!result.success) {
           throw new Error(
             result.message || "Submission failed"
           );
@@ -306,27 +305,20 @@
         form.reset();
 
       } catch (error) {
-
         console.error(error);
 
         showMessage(
-          "❌ Submission failed. Check that the server is running.",
+          "❌ Submission failed. Please try again.",
           "error"
         );
-
       } finally {
-
         button.disabled = false;
         button.textContent = "Continue →";
-
       }
-
     });
 
     function showMessage(message, type) {
-
       status.textContent = message;
-
       status.className = "status " + type;
     }
   </script>
