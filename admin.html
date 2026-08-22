@@ -21,9 +21,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-
       color: white;
-
       padding: 30px;
 
       background:
@@ -50,42 +48,30 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-
       gap: 20px;
-
       margin-bottom: 30px;
     }
 
     .title-small {
       color: #a78bfa;
-
       font-size: 11px;
       font-weight: 800;
-
       letter-spacing: 1.5px;
-
       margin-bottom: 8px;
     }
 
     h1 {
       margin: 0;
-
       font-size: 36px;
-
       letter-spacing: -1.5px;
     }
 
     .refresh {
       border: 0;
-
       color: white;
-
       padding: 13px 20px;
-
       border-radius: 13px;
-
       font-weight: 700;
-
       cursor: pointer;
 
       background:
@@ -101,147 +87,99 @@
 
     .stats {
       display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
+      grid-template-columns: repeat(3, 1fr);
       gap: 15px;
-
       margin-bottom: 25px;
     }
 
     .stat {
       padding: 20px;
-
       border-radius: 18px;
-
       background: rgba(255,255,255,.06);
-
-      border:
-        1px solid
-        rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.1);
     }
 
     .stat-label {
       color: #88899d;
-
       font-size: 11px;
-
       margin-bottom: 8px;
     }
 
     .stat-value {
       font-size: 25px;
-
       font-weight: 800;
     }
 
     .submission {
       padding: 22px;
-
       margin-bottom: 15px;
-
       border-radius: 20px;
-
-      background:
-        rgba(255,255,255,.065);
-
-      border:
-        1px solid
-        rgba(255,255,255,.1);
-
+      background: rgba(255,255,255,.065);
+      border: 1px solid rgba(255,255,255,.1);
       backdrop-filter: blur(20px);
-
-      box-shadow:
-        0 15px 40px rgba(0,0,0,.2);
+      box-shadow: 0 15px 40px rgba(0,0,0,.2);
     }
 
     .submission-top {
       display: flex;
-
       justify-content: space-between;
-
       gap: 15px;
-
       margin-bottom: 17px;
     }
 
     .submission-id {
       color: #c4b5fd;
-
       font-weight: 800;
-
       font-size: 13px;
     }
 
     .date {
       color: #707185;
-
       font-size: 11px;
     }
 
     .sections {
       display: grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
+      grid-template-columns: 1fr 1fr;
       gap: 15px;
     }
 
     .section {
       padding: 17px;
-
       border-radius: 15px;
-
-      background:
-        rgba(0,0,0,.2);
+      background: rgba(0,0,0,.2);
     }
 
     .label {
       color: #8b5cf6;
-
       font-size: 10px;
-
       font-weight: 900;
-
       letter-spacing: 1px;
-
       margin-bottom: 8px;
     }
 
     .value {
       color: #e5e7eb;
-
       font-size: 14px;
-
       line-height: 1.5;
-
       word-break: break-word;
     }
 
     .empty {
       padding: 60px;
-
       text-align: center;
-
       color: #77788c;
-
       border-radius: 20px;
-
-      background:
-        rgba(255,255,255,.05);
+      background: rgba(255,255,255,.05);
     }
 
     .error {
       color: #fca5a5;
-
       padding: 25px;
-
       text-align: center;
     }
 
-    @media(max-width: 700px) {
+    @media(max-width:700px) {
 
       body {
         padding: 16px;
@@ -249,7 +187,6 @@
 
       .top {
         align-items: flex-start;
-
         flex-direction: column;
       }
 
@@ -293,6 +230,7 @@
     <div class="stats">
 
       <div class="stat">
+
         <div class="stat-label">
           TOTAL SUBMISSIONS
         </div>
@@ -303,9 +241,11 @@
         >
           0
         </div>
+
       </div>
 
       <div class="stat">
+
         <div class="stat-label">
           STATUS
         </div>
@@ -316,9 +256,11 @@
         >
           LIVE
         </div>
+
       </div>
 
       <div class="stat">
+
         <div class="stat-label">
           DATABASE
         </div>
@@ -326,6 +268,7 @@
         <div class="stat-value">
           Google Sheets
         </div>
+
       </div>
 
     </div>
@@ -339,7 +282,7 @@
   <script>
 
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbxA7Ge4T2bx_IBQLG56_Hp-WX47Yy2YSD7dEC2UQXcPnGmOX6MTMHIV_Z6MU-Zgat2-/exec";
+      "https://script.google.com/macros/s/AKfycbx61bgHjlTKC_wVHqB4xjiHY1LqlEfhkfuXbTENC9sWjgbM52y-JwFaumhkdOW7f8_i/exec";
 
     async function loadSubmissions() {
 
@@ -352,13 +295,15 @@
           await fetch(API_URL);
 
         if (!response.ok) {
-          throw new Error(
-            "Failed to load"
-          );
+          throw new Error("Failed to load");
         }
 
         const data =
           await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid response");
+        }
 
         document.getElementById("total")
           .textContent = data.length;
