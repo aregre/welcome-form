@@ -1,813 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>login first</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-    }
-
-    body {
-      min-height: 100vh;
-      overflow: hidden;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      background:
-        radial-gradient(
-          circle at 50% 40%,
-          rgba(100, 10, 30, 0.28),
-          transparent 35%
-        ),
-        linear-gradient(
-          135deg,
-          #030305,
-          #0d0509,
-          #030305
-        );
-
-      color: white;
-    }
-
-    /* Background glow */
-
-    .glow {
-      position: fixed;
-      width: 450px;
-      height: 450px;
-
-      left: 50%;
-      top: 50%;
-
-      transform: translate(-50%, -50%);
-
-      background: rgba(255, 0, 55, 0.12);
-
-      filter: blur(100px);
-
-      animation: glowMove 6s ease-in-out infinite alternate;
-
-      pointer-events: none;
-    }
-
-    @keyframes glowMove {
-      0% {
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0.5;
-      }
-
-      100% {
-        transform: translate(-50%, -50%) scale(1.25);
-        opacity: 1;
-      }
-    }
-
-    /* Floating particles */
-
-    .particles {
-      position: fixed;
-      inset: 0;
-
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-
-      width: 3px;
-      height: 3px;
-
-      border-radius: 50%;
-
-      background: #ff174f;
-
-      box-shadow:
-        0 0 8px #ff174f,
-        0 0 15px #ff174f;
-
-      animation: particleMove 8s linear infinite;
-
-      opacity: 0;
-    }
-
-    .particle:nth-child(1) {
-      left: 8%;
-      animation-delay: 0s;
-    }
-
-    .particle:nth-child(2) {
-      left: 22%;
-      animation-delay: 2s;
-    }
-
-    .particle:nth-child(3) {
-      left: 42%;
-      animation-delay: 4s;
-    }
-
-    .particle:nth-child(4) {
-      left: 67%;
-      animation-delay: 1s;
-    }
-
-    .particle:nth-child(5) {
-      left: 88%;
-      animation-delay: 3s;
-    }
-
-    @keyframes particleMove {
-      0% {
-        bottom: -10px;
-        opacity: 0;
-        transform: scale(0.5);
-      }
-
-      15% {
-        opacity: 0.8;
-      }
-
-      85% {
-        opacity: 0.5;
-      }
-
-      100% {
-        bottom: 110%;
-        opacity: 0;
-        transform: scale(1.4);
-      }
-    }
-
-    /* Main scene */
-
-    .scene {
-      position: relative;
-
-      width: min(1000px, 100vw);
-      height: 100vh;
-
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-
-      z-index: 2;
-    }
-
-    /* Video */
-
-    .mikey-video {
-      position: absolute;
-
-      left: 50%;
-      bottom: 0;
-
-      transform: translateX(-50%);
-
-      width: min(650px, 90vw);
-      height: 92vh;
-
-      object-fit: contain;
-
-      border: none;
-      outline: none;
-
-      filter:
-        drop-shadow(0 0 20px rgba(255, 20, 70, 0.18))
-        drop-shadow(0 0 50px rgba(255, 0, 40, 0.08));
-
-      animation: characterFloat 4s ease-in-out infinite;
-
-      z-index: 2;
-    }
-
-    @keyframes characterFloat {
-      0%,
-      100% {
-        transform: translateX(-50%) translateY(0);
-      }
-
-      50% {
-        transform: translateX(-50%) translateY(-7px);
-      }
-    }
-
-    /* Dark overlay around edges */
-
-    .scene::after {
-      content: "";
-
-      position: absolute;
-      inset: 0;
-
-      pointer-events: none;
-
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(0,0,0,0.35),
-          transparent 25%,
-          transparent 70%,
-          rgba(0,0,0,0.5)
-        );
-
-      z-index: 3;
-    }
-
-    /* Section boxes */
-
-    .section-box {
-      position: absolute;
-
-      width: 210px;
-
-      padding: 9px;
-
-      background: rgba(7, 7, 12, 0.82);
-
-      border: 1px solid rgba(255, 23, 79, 0.65);
-
-      border-radius: 12px;
-
-      backdrop-filter: blur(12px);
-
-      box-shadow:
-        0 0 20px rgba(255, 23, 79, 0.18),
-        inset 0 0 15px rgba(255, 23, 79, 0.04);
-
-      z-index: 5;
-
-      animation: boxFloat 3s ease-in-out infinite;
-    }
-
-    /* Left shoulder */
-
-    .left-section {
-      left: calc(50% - 435px);
-      bottom: 27%;
-    }
-
-    /* Right shoulder */
-
-    .right-section {
-      right: calc(50% - 435px);
-      bottom: 27%;
-
-      animation-delay: 0.5s;
-    }
-
-    @keyframes boxFloat {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-6px);
-      }
-    }
-
-    /* Input */
-
-    .section-box input {
-      width: 100%;
-      height: 46px;
-
-      padding: 0 13px;
-
-      border: 1px solid #292933;
-
-      border-radius: 8px;
-
-      outline: none;
-
-      background: #0b0b11;
-
-      color: white;
-
-      font-size: 12px;
-
-      transition: 0.25s ease;
-    }
-
-    .section-box input::placeholder {
-      color: #777;
-    }
-
-    .section-box input:hover {
-      border-color: #555563;
-    }
-
-    .section-box input:focus {
-      border-color: #ff174f;
-
-      box-shadow:
-        0 0 0 2px rgba(255, 23, 79, 0.08),
-        0 0 18px rgba(255, 23, 79, 0.25);
-    }
-
-    /* Continue button */
-
-    .continue-area {
-      position: absolute;
-
-      left: 50%;
-      bottom: 7%;
-
-      transform: translateX(-50%);
-
-      width: 210px;
-
-      z-index: 6;
-
-      text-align: center;
-    }
-
-    button {
-      width: 100%;
-      height: 45px;
-
-      border: none;
-      border-radius: 9px;
-
-      color: white;
-
-      background:
-        linear-gradient(
-          135deg,
-          #ff174f,
-          #a50029
-        );
-
-      font-size: 13px;
-      font-weight: 800;
-
-      letter-spacing: 1px;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 8px 25px rgba(255, 23, 79, 0.25);
-
-      transition: 0.25s ease;
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-
-      box-shadow:
-        0 12px 30px rgba(255, 23, 79, 0.4);
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: wait;
-      transform: none;
-    }
-
-    /* Status */
-
-    .status {
-      display: none;
-
-      margin-top: 10px;
-      padding: 9px;
-
-      border-radius: 8px;
-
-      font-size: 11px;
-      font-weight: 600;
-
-      background: rgba(10,10,15,0.9);
-    }
-
-    .success {
-      display: block;
-
-      color: #72ffad;
-
-      border: 1px solid rgba(50, 220, 120, 0.25);
-    }
-
-    .error {
-      display: block;
-
-      color: #ff6d88;
-
-      border: 1px solid rgba(255, 50, 80, 0.25);
-    }
-
-    /* Title */
-
-    .title {
-      position: absolute;
-
-      top: 5%;
-
-      left: 50%;
-
-      transform: translateX(-50%);
-
-      z-index: 6;
-
-      text-align: center;
-
-      letter-spacing: 5px;
-
-      font-size: 25px;
-
-      font-weight: 900;
-
-      color: white;
-
-      text-shadow:
-        0 0 10px rgba(255,255,255,0.2),
-        0 0 25px rgba(255,23,79,0.35);
-
-      white-space: nowrap;
-    }
-
-    .subtitle {
-      margin-top: 7px;
-
-      color: #777;
-
-      font-size: 10px;
-
-      letter-spacing: 2px;
-    }
-
-    /* Footer */
-
-    .footer {
-      position: fixed;
-
-      bottom: 12px;
-
-      left: 50%;
-
-      transform: translateX(-50%);
-
-      z-index: 10;
-
-      color: #444;
-
-      font-size: 9px;
-
-      letter-spacing: 1px;
-
-      white-space: nowrap;
-    }
-
-    /* Mobile */
-
-    @media (max-width: 850px) {
-
-      .mikey-video {
-        width: 100vw;
-        height: 82vh;
-      }
-
-      .left-section {
-        left: 2%;
-        bottom: 25%;
-      }
-
-      .right-section {
-        right: 2%;
-        bottom: 25%;
-      }
-
-      .section-box {
-        width: 165px;
-      }
-    }
-
-    @media (max-width: 600px) {
-
-      .title {
-        top: 4%;
-
-        font-size: 19px;
-        letter-spacing: 3px;
-      }
-
-      .subtitle {
-        font-size: 8px;
-      }
-
-      .mikey-video {
-        width: 115vw;
-        height: 76vh;
-      }
-
-      .section-box {
-        width: 145px;
-        padding: 7px;
-      }
-
-      .section-box input {
-        height: 42px;
-        font-size: 11px;
-      }
-
-      .left-section {
-        left: 1%;
-        bottom: 23%;
-      }
-
-      .right-section {
-        right: 1%;
-        bottom: 23%;
-      }
-
-      .continue-area {
-        width: 180px;
-        bottom: 8%;
-      }
-    }
-
-    @media (max-width: 420px) {
-
-      .section-box {
-        width: 130px;
-      }
-
-      .section-box input {
-        height: 40px;
-        padding: 0 9px;
-        font-size: 10px;
-      }
-
-      .left-section {
-        left: 2px;
-      }
-
-      .right-section {
-        right: 2px;
-      }
-
-      .mikey-video {
-        width: 125vw;
-      }
-
-      .continue-area {
-        width: 165px;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Walls of Silence — A Cinematic Scroll Tale</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#14161c; --parchment:#f3ead8; --gold:#c9a24b; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--ink); color:var(--parchment); font-family:'Cormorant Garamond',serif; overflow-x:hidden; }
+  img { display:block; }
+  .pin { position:sticky; top:0; height:100vh; overflow:hidden; }
+  .fill { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; will-change:transform; }
+  .center { position:absolute; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 24px; opacity:0; }
+  .title { font-size:clamp(3rem,9vw,8rem); font-weight:500; font-style:italic; text-shadow:0 4px 30px rgba(0,0,0,.5); }
+  .eyebrow { font-family:sans-serif; font-size:11px; letter-spacing:.45em; text-transform:uppercase; color:rgba(243,234,216,.75); margin-bottom:20px; }
+  .lede { margin-top:24px; max-width:36rem; font-size:clamp(1.1rem,2vw,1.35rem); font-style:italic; color:rgba(243,234,216,.85); }
+  .btn { display:inline-block; border-radius:999px; padding:12px 32px; font-family:sans-serif; font-size:11px; letter-spacing:.3em; text-transform:uppercase; text-decoration:none; transition:all .25s; }
+  .btn-gold { background:var(--gold); color:var(--ink); }
+  .btn-gold:hover { transform:scale(1.05); }
+  .btn-line { border:1px solid rgba(243,234,216,.5); color:var(--parchment); }
+  .btn-line:hover { border-color:var(--gold); color:var(--gold); }
+  @keyframes flap { 0%,100%{transform:scaleY(1) rotate(0)} 50%{transform:scaleY(.82) rotate(-3deg)} }
+  .flap { animation:flap .7s ease-in-out infinite; transform-origin:50% 40%; }
+  /* header */
+  header { position:fixed; inset:0 0 auto 0; z-index:50; backdrop-filter:blur(12px); background:rgba(20,22,28,.25); border-bottom:1px solid rgba(243,234,216,.1); }
+  header nav { max-width:72rem; margin:auto; display:flex; align-items:center; justify-content:space-between; padding:16px 24px; }
+  header .brand { font-size:18px; font-style:italic; color:var(--parchment); text-decoration:none; }
+  header ul { display:flex; gap:32px; list-style:none; font-family:sans-serif; font-size:11px; letter-spacing:.3em; text-transform:uppercase; }
+  header ul a { color:rgba(243,234,216,.7); text-decoration:none; }
+  header ul a:hover { color:var(--gold); }
+  .btn-head { border:1px solid rgba(201,162,75,.6); color:var(--gold); padding:8px 20px; }
+  .btn-head:hover { background:var(--gold); color:var(--ink); }
+  @media (max-width:768px){ header ul { display:none; } }
+  /* cream sections */
+  .cream { background:var(--parchment); color:var(--ink); overflow:hidden; position:relative; }
+  .verse { font-size:clamp(2.2rem,6vw,4rem); font-style:italic; line-height:1.2; text-align:center; }
+  .poem { font-size:clamp(1rem,1.6vw,1.15rem); font-style:italic; line-height:2.1; text-align:center; color:rgba(20,22,28,.8); }
+  /* footer */
+  footer { background:var(--ink); border-top:1px solid rgba(243,234,216,.1); padding:64px 24px 32px; font-family:sans-serif; }
+  footer .cols { max-width:72rem; margin:auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:40px; }
+  footer h3 { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; color:var(--parchment); margin-bottom:14px; }
+  footer a { display:block; color:rgba(243,234,216,.6); text-decoration:none; font-size:13px; margin-bottom:10px; }
+  footer a:hover { color:var(--gold); }
+  footer input { background:transparent; border:1px solid rgba(243,234,216,.3); border-radius:999px; padding:10px 16px; color:var(--parchment); width:100%; margin-bottom:10px; }
+  footer .legal { max-width:72rem; margin:48px auto 0; padding-top:20px; border-top:1px solid rgba(243,234,216,.1); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:rgba(243,234,216,.4); }
+</style>
 </head>
-
 <body>
 
-  <div class="glow"></div>
+<header>
+  <nav>
+    <a class="brand" href="#top">Walls of Silence</a>
+    <ul>
+      <li><a href="#gate">The Gate</a></li>
+      <li><a href="#hall">The Hall</a></li>
+      <li><a href="#verses">Verses</a></li>
+      <li><a href="#end">Finale</a></li>
+    </ul>
+    <a class="btn btn-head" href="#verses">Read the poem</a>
+  </nav>
+</header>
 
-  <div class="particles">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-  </div>
+<!-- the bird: flies across the whole page as you scroll -->
+<div id="bird" style="position:fixed;left:0;top:0;z-index:40;pointer-events:none;will-change:transform">
+  <img class="flap" src="owl.png" alt="" style="width:110px;filter:drop-shadow(0 10px 30px rgba(0,0,0,.45))">
+</div>
 
-
-  <div class="scene">
-
-    <!-- Your video -->
-    <video
-      class="mikey-video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
-    >
-      <source src="mikey.mp4" type="video/mp4">
-      Your browser does not support video.
-    </video>
-
-
-    <div class="title">
-      login
-      <div class="subtitle">
-        enter the details😊
+<!-- HERO -->
+<section id="top" data-track data-pin style="position:relative;height:320vh">
+  <div class="pin">
+    <img class="fill" src="castle-hero.jpg" alt="Snow-covered castle glowing at dusk" data-motion="hero-castle">
+    <img class="fill" src="clouds-sky.jpg" alt="" data-motion="hero-clouds">
+    <img src="fog.png" alt="" data-motion="fog" data-fog-base="0.15"
+         style="position:absolute;bottom:-40px;left:-25%;width:150vw;will-change:transform">
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,22,28,.3),transparent,rgba(20,22,28,.5))"></div>
+    <div class="center" data-motion="title-gate" id="gate">
+      <p class="eyebrow">A tale kept by the towers</p>
+      <h1 class="title">The Forgotten Gate</h1>
+      <p class="lede">Look up, if you ever happen to stand beneath the dome.</p>
+    </div>
+    <div class="center" data-motion="title-walls">
+      <h2 class="title">Walls of Silence</h2>
+      <p class="lede">Towers that have no doors sometimes still stand watch over the valley.</p>
+      <div style="margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+        <a class="btn btn-gold" href="#hall">Enter the hall</a>
+        <a class="btn btn-line" href="#verses">Read the verses</a>
       </div>
     </div>
+  </div>
+</section>
 
-
-    <!-- Left shoulder section -->
-
-    <div class="section-box left-section">
-
-      <input
-        id="section1"
-        type="text"
-        placeholder="User name"
-        autocomplete="off"
-        required
-      >
-
+<!-- GOLDEN HALL -->
+<section id="hall" data-track data-pin style="position:relative;height:300vh">
+  <div class="pin">
+    <img class="fill" src="golden-hall.jpg" alt="A golden baroque hall" data-motion="hall-img">
+    <img src="owl.png" alt="A white owl gliding through the hall" data-motion="owl-fly"
+         style="position:absolute;left:50%;top:33%;z-index:10;width:150px;opacity:0;will-change:transform">
+    <img src="fog.png" alt="" data-motion="fog" data-fog-base="0.2" data-fog-dir="left"
+         style="position:absolute;bottom:-64px;left:-25%;z-index:20;width:150vw;will-change:transform">
+    <img src="fog.png" alt="" data-motion="fog" data-fog-base="0.1"
+         style="position:absolute;top:-96px;right:-25%;z-index:20;width:120vw;will-change:transform">
+    <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 8%">
+      <h2 class="title" style="font-size:clamp(2.6rem,7vw,5rem)" data-motion="title-walls">The Grandeur<br>Within</h2>
     </div>
+  </div>
+</section>
 
+<!-- VERSE I -->
+<section id="verses" class="cream" data-track style="padding:160px 24px">
+  <div style="max-width:56rem;margin:auto;text-align:center">
+    <img src="owl.png" alt="A white owl descending" data-motion="owl" style="width:170px;margin:0 auto 32px;will-change:transform">
+    <p class="verse" data-motion="fade">Winging in the hollows,<br>closer to the sky</p>
+  </div>
+</section>
 
-    <!-- Right shoulder section -->
+<!-- POEM -->
+<section class="cream" data-track style="padding:140px 24px">
+  <div class="poem" style="max-width:38rem;margin:auto">
+    <p data-motion="fade">look up, if you ever happen to stand beneath<br>the dome,<br>and you will know why I found its captives,<br>with each brush with passing time it is<br>much worse —</p>
+    <img src="owl.png" alt="The white owl mid-poem" data-motion="owl" style="width:130px;margin:36px auto;opacity:.9">
+    <p data-motion="fade">no scene the sky visits is ever quite the same.<br>How I could wade through the deep and<br>tender blue,<br>as clouds drift by, and the miracles pool, still<br>and tame.</p>
+  </div>
+</section>
 
-    <div class="section-box right-section">
+<!-- VERSE II -->
+<section class="cream" data-track style="padding:200px 24px">
+  <div style="position:relative;max-width:56rem;margin:auto;text-align:center">
+    <img src="owl.png" alt="" data-motion="owl-dive"
+         style="position:absolute;left:50%;top:50%;margin-left:-100px;width:200px;opacity:0;pointer-events:none;will-change:transform">
+    <p class="verse" style="position:relative" data-motion="fade">and miracles pool,<br>still and tame.</p>
+    <div style="position:relative;margin:56px auto 0;height:1px;width:96px;background:rgba(201,162,75,.6)" data-motion="fade"></div>
+  </div>
+</section>
 
-      <input
-        id="section2"
-        type="text"
-        placeholder="password"
-        autocomplete="off"
-        required
-      >
-
+<!-- FINALE -->
+<section id="end" data-track data-pin style="position:relative;height:220vh">
+  <div class="pin">
+    <img class="fill" src="castle-hero.jpg" alt="" data-motion="hall-img">
+    <div style="position:absolute;inset:0;background:rgba(20,22,28,.45)"></div>
+    <img src="fog.png" alt="" data-motion="fog" data-fog-base="0.3"
+         style="position:absolute;bottom:-64px;left:-25%;width:150vw;will-change:transform">
+    <div class="center" data-motion="title-walls" style="opacity:1">
+      <h2 class="title">Fin.</h2>
+      <p class="lede">The towers keep the silence; the owl keeps the sky.</p>
+      <a class="btn btn-gold" style="margin-top:40px" href="#top">Return to the gate</a>
     </div>
+  </div>
+</section>
 
-
-    <!-- Continue -->
-
-    <div class="continue-area">
-
-      <form id="myForm">
-
-        <button
-          id="submitBtn"
-          type="submit"
-        >
-          CONTINUE
-        </button>
-
-        <div
-          id="status"
-          class="status"
-        ></div>
-
+<!-- FOOTER -->
+<footer>
+  <div class="cols">
+    <div>
+      <h3>Walls of Silence</h3>
+      <p style="color:rgba(243,234,216,.6);font-size:13px;line-height:1.7">A cinematic scroll tale of towers, fog, and a white owl crossing quiet halls.</p>
+    </div>
+    <div>
+      <h3>Chapters</h3>
+      <a href="#gate">The Gate</a><a href="#hall">The Hall</a><a href="#verses">Verses</a><a href="#end">Finale</a>
+    </div>
+    <div>
+      <h3>Letters from the tower</h3>
+      <form onsubmit="event.preventDefault();this.querySelector('button').textContent='Subscribed';">
+        <input type="email" required placeholder="Your email">
+        <button class="btn btn-gold" type="submit" style="width:100%;border:0;cursor:pointer">Subscribe</button>
       </form>
-
     </div>
-
   </div>
+  <div class="legal">© 2026 Walls of Silence — a scroll-driven storybook</div>
+</footer>
 
+<script>
+const clamp01 = v => Math.min(1, Math.max(0, v));
+const seg = (p,a,b) => clamp01((p-a)/(b-a));
+let raf = 0;
 
-  <div class="footer">
-    © 2026 • DARK SECTION
-  </div>
-
-
-  <script>
-
-    const API_URL =
-      "https://script.google.com/macros/s/AKfycbx61bgHjlTKC_wVHqB4xjiHY1LqlEfhkfuXbTENC9sWjgbM52y-JwFaumhkdOW7f8_i/exec";
-
-
-    const form =
-      document.getElementById("myForm");
-
-    const button =
-      document.getElementById("submitBtn");
-
-    const status =
-      document.getElementById("status");
-
-
-    form.addEventListener(
-      "submit",
-      async function(event) {
-
-        event.preventDefault();
-
-
-        const section1 =
-          document
-            .getElementById("section1")
-            .value
-            .trim();
-
-
-        const section2 =
-          document
-            .getElementById("section2")
-            .value
-            .trim();
-
-
-        if (!section1 || !section2) {
-
-          showMessage(
-            "Please fill both sections.",
-            "error"
-          );
-
-          return;
-        }
-
-
-        button.disabled = true;
-
-        button.textContent =
-          "SUBMITTING...";
-
-
-        try {
-
-          const response =
-            await fetch(
-              API_URL,
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "text/plain;charset=utf-8"
-                },
-
-                body: JSON.stringify({
-                  section1: section1,
-                  section2: section2
-                })
-              }
-            );
-
-
-          const result =
-            await response.json();
-
-
-          if (
-            !response.ok ||
-            !result.success
-          ) {
-
-            throw new Error(
-              result.message ||
-              "Submission failed"
-            );
-
-          }
-
-
-          showMessage(
-            "✓ Submission successful!",
-            "success"
-          );
-
-
-          form.reset();
-
-
-        } catch (error) {
-
-          console.error(error);
-
-
-          showMessage(
-            "❌ Submission failed. Please try again.",
-            "error"
-          );
-
-
-        } finally {
-
-          button.disabled = false;
-
-          button.textContent =
-            "CONTINUE";
-
-        }
-
-      }
-    );
-
-
-    function showMessage(
-      message,
-      type
-    ) {
-
-      status.textContent =
-        message;
-
-      status.className =
-        "status " + type;
-
+function update(){
+  raf = 0;
+  const vh = innerHeight;
+  document.querySelectorAll('[data-motion]').forEach(el => {
+    const track = el.closest('[data-track]') || el;
+    const r = track.getBoundingClientRect();
+    const pinned = track.hasAttribute('data-pin');
+    const p = pinned ? clamp01(-r.top / Math.max(1, r.height - vh))
+                     : clamp01((vh - r.top) / (vh + r.height));
+    const kind = el.dataset.motion;
+    if (kind === 'hero-clouds') {
+      el.style.transform = `scale(${1 + p * 2.2})`;
+      el.style.opacity = 1 - seg(p, .3, .62);
+    } else if (kind === 'hero-castle') {
+      el.style.transform = `scale(${1.35 - p * .35})`;
+    } else if (kind === 'title-gate') {
+      const o = seg(p,.28,.42) * (1 - seg(p,.55,.68));
+      el.style.opacity = o;
+      el.style.transform = `translateY(${(1 - seg(p,.28,.42)) * 30}px)`;
+    } else if (kind === 'title-walls') {
+      const o = seg(p,.66,.82);
+      el.style.opacity = o;
+      el.style.transform = `translateY(${(1 - o) * 30}px)`;
+    } else if (kind === 'hall-img') {
+      el.style.transform = `scale(${1.18 - p * .18}) translateY(${(p - .5) * -40}px)`;
+    } else if (kind === 'fog') {
+      const edge = 1 - Math.sin(p * Math.PI);
+      const base = parseFloat(el.dataset.fogBase || '0.25');
+      const dir = el.dataset.fogDir === 'left' ? -1 : 1;
+      el.style.opacity = Math.min(1, base + edge * .75);
+      el.style.transform = `translateX(${dir * (p - .5) * 30}vw) scale(1.4)`;
+    } else if (kind === 'owl-fly') {
+      el.style.opacity = seg(p,.1,.25) * (1 - seg(p,.8,.95));
+      el.style.transform = `translate(${(p-.5)*90}vw, ${Math.sin(p*Math.PI*3)*24}px) rotate(${Math.sin(p*6)*6}deg)`;
+    } else if (kind === 'fade') {
+      const o = seg(p, parseFloat(el.dataset.fadeStart||'.1'), parseFloat(el.dataset.fadeEnd||'.4'));
+      el.style.opacity = o;
+      el.style.transform = `translateY(${(1-o)*40}px)`;
+    } else if (kind === 'owl') {
+      el.style.transform = `translate(${Math.sin(p*Math.PI*2)*18}px, ${(p-.5)*-120}px)`;
+    } else if (kind === 'owl-dive') {
+      el.style.opacity = seg(p,.1,.3) * (1 - seg(p,.75,.95));
+      el.style.transform = `translateY(${(p-.35)*160}px) rotate(${(p-.5)*40}deg)`;
     }
+  });
 
-  </script>
+  // global bird follows whole-page scroll
+  const bird = document.getElementById('bird');
+  const max = Math.max(1, document.documentElement.scrollHeight - vh);
+  const gp = clamp01(scrollY / max);
+  bird.style.transform =
+    `translate(${-20 + gp * 140}vw, ${12 + Math.sin(gp*Math.PI*3)*22 + gp*30}vh) ` +
+    `rotate(${Math.cos(gp*Math.PI*3)*14}deg) scale(${.75 + Math.sin(gp*Math.PI)*.5})`;
+  bird.style.opacity = .35 + Math.sin(gp*Math.PI) * .6;
+}
 
+function onScroll(){ if (!raf) raf = requestAnimationFrame(update); }
+addEventListener('scroll', onScroll, { passive:true });
+addEventListener('resize', onScroll);
+update();
+</script>
 </body>
 </html>
